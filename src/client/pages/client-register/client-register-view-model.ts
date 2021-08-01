@@ -1,14 +1,14 @@
 import { DialogService, NavigationService, PageViewModel, route, template } from "@nivinjoseph/n-app";
-import "./client-login-view.scss";
-import { Routes } from "../routes";
-import { inject } from "@nivinjoseph/n-ject";
 import { given } from "@nivinjoseph/n-defensive";
+import { inject } from "@nivinjoseph/n-ject";
 import { AuthenticationService } from "../../../sdk/services/authentication/authentication-service";
+import { Routes } from "../routes";
+import "./client-register-view.scss";
 
-@template(require("./client-login-view.html"))
-@route(Routes.clientLogin)
+@template(require("./client-register-view.html"))
+@route(Routes.clientRegister)
 @inject("NavigationService", "DialogService", "AuthenticationService")
-export class ClientLoginViewModel extends PageViewModel
+export class ClientRegisterViewModel extends PageViewModel
 {
     private readonly _navigationService: NavigationService;
     private readonly _dialogService: DialogService;
@@ -33,7 +33,7 @@ export class ClientLoginViewModel extends PageViewModel
         given(navigationService, "navigationService").ensureHasValue().ensureIsObject();
         this._navigationService = navigationService;
         
-        given(dialogService, "dialogService").ensureHasValue().ensureIsObject();
+        given(dialogService, "DialogService").ensureHasValue().ensureIsObject();
         this._dialogService = dialogService;
         
         given(authenticationService, "authenticationService").ensureHasValue().ensureIsObject();
@@ -41,26 +41,21 @@ export class ClientLoginViewModel extends PageViewModel
     }
     
     
-    public gotoRegister(): void
-    {
-        this._navigationService.navigate(Routes.clientRegister);
-    }
-    
-    public async signIn(): Promise<void>
+    public async signUp(): Promise<void>
     {
         this._dialogService.showLoadingScreen();
         
         try
         {
-            console.log(this._email);
+            await this._authenticationService.signUp(this._email, this._password);
             
-            await this._authenticationService.signIn(this._email, this._password);
+            this._navigationService.navigate(Routes.clientLogin);
         }
         catch (e)
         {
             console.error(e);
             
-            this._dialogService.showErrorMessage("There has been an error signing in. Please contact support.",
+            this._dialogService.showErrorMessage("There has been an error signing up. Please contact support.",
                 "Error");
         }
         finally
