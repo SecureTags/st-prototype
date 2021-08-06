@@ -1,7 +1,7 @@
 import { DialogService, NavigationService, PageViewModel, route, template } from "@nivinjoseph/n-app";
 import { given } from "@nivinjoseph/n-defensive";
 import { inject } from "@nivinjoseph/n-ject";
-import { AuthenticationService } from "../../../sdk/services/authentication/authentication-service";
+import { AuthenticationService } from "../../../sdk/services/authentication-service/authentication-service";
 import { Routes } from "../routes";
 import "./client-register-view.scss";
 

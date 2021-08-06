@@ -10,7 +10,8 @@ import { pages } from "./pages/pages";
 import { ComponentInstaller, Registry } from "@nivinjoseph/n-ject";
 import { given } from "@nivinjoseph/n-defensive";
 import { components } from "./components/components";
-import { FirebaseAuthenticationService } from "../sdk/services/authentication/firebase-authentication-service";
+import { FirebaseAuthenticationService } from "../sdk/services/authentication-service/firebase-authentication-service";
+import { DefaultTagService } from "../sdk/services/tag-service/default-tag-service";
 
 console.log(Vue);
 
@@ -22,6 +23,7 @@ class Installer implements ComponentInstaller
         given(registry, "registry").ensureHasValue().ensureIsObject();
 
         registry.registerSingleton("AuthenticationService", FirebaseAuthenticationService);
+        registry.registerSingleton("TagService", DefaultTagService);
         // Types of dependencies: 
         // registerSingleton: Singleton, one instance of the dependency class through out the lifecycle of the app.
         // registry.registerTransient: Transient, new instance of the dependency class is created when it needs to be injected.

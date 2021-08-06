@@ -3,7 +3,7 @@ import "./client-login-view.scss";
 import { Routes } from "../routes";
 import { inject } from "@nivinjoseph/n-ject";
 import { given } from "@nivinjoseph/n-defensive";
-import { AuthenticationService } from "../../../sdk/services/authentication/authentication-service";
+import { AuthenticationService } from "../../../sdk/services/authentication-service/authentication-service";
 
 @template(require("./client-login-view.html"))
 @route(Routes.clientLogin)
