@@ -1,0 +1,48 @@
+<div class="user-register">
+    <section class="hero is-fullheight is-dark">
+        <div class="hero-body">
+            <div class="columns is-flex-grow-1">
+                <div class="column is-flex is-justify-content-center">
+                    <div class="registration-container box">
+                        <h3 class="has-text-weight-bold has-text-centered mb-1">Sign Up</h3>
+                        <div class="columns my-0">
+                            <div class="column">
+                                <div class="field">
+                                    <label for="" class="label">First Name</label>
+                                    <div class="control">
+                                        <input type="text" class="input" v-model="firstName"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label for="" class="label">Last Name</label>
+                                    <div class="control">
+                                        <input type="text" class="input" v-model="lastName"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="" class="label">Email</label>
+                            <div class="control">
+                                <input type="text" class="input" v-model="email"/>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label for="" class="label">Password</label>
+                            <div class="control">
+                                <input type="password" class="input" v-model="password" />
+                            </div>
+                        </div>
+                        <div class="is-flex is-justify-content-center">
+                            <button class="button mr-2" @click="signUp">
+                                Register
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
