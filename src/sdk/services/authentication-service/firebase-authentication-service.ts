@@ -39,7 +39,7 @@ export class FirebaseAuthenticationService implements AuthenticationService
     }
     
     
-    public async signUpNewUser(email: string, password: string, firstName: string, lastName: string,
+    public async signUp(email: string, password: string, firstName: string, lastName: string,
         profileImageUrl: string[]): Promise<void>
     {
         try
@@ -57,17 +57,31 @@ export class FirebaseAuthenticationService implements AuthenticationService
         }
     }
     
-    public async signIn(email: string, password: string): Promise<void>
+    public async signIn(email: string, password: string): Promise<boolean>
     {
         try
         {
-            console.log(email);
-            console.log(JSON.stringify(await firebase.auth().signInWithEmailAndPassword(email, password)));
+            const user = await firebase.auth().signInWithEmailAndPassword(email, password);
+            
+            if (user)
+                return true;
         }
         catch (e)
         {
             throw e;
         }
+        
+        return false;
+    }
+    
+    public async getCurrentUserId(): Promise<string>
+    {
+        const user = firebase.auth().currentUser;
+        
+        if (user)
+            return user.uid;
+        
+        throw new Error("User UID is null");
     }
     
     

@@ -1,0 +1,30 @@
+<div class="tag-card">
+    <div class="vertical-card is-clickable" @click="gotoUserTag">
+        <div class="columns is-gapless">
+            <div class="column is-4">
+                <figure class="image is-square">
+                    <img
+                        :src="tag.imageUrl[0]"
+                        alt=""
+                    />
+                </figure>
+            </div>
+            <div class="column">
+                <div
+                    class="vertical-card-body is-flex is-align-items-center has has-background-light p-5"
+                    
+                >
+                    <div class="pl-5">
+                        <h1 class="is-size-1 title">
+                            {{ tag.companyName }}<sup class="is-size-6">©</sup>
+                        </h1>
+                        <h2 class="subtitle">{{ tag.productName }}</h2>
+                        <h2 class="subtitle is-size-6">
+                            {{ tag.id }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

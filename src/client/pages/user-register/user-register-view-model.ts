@@ -55,7 +55,7 @@ export class UserRegisterViewModel extends PageViewModel
         
         try
         {
-            await this._authenticationService.signUpNewUser(this._email, this._password, this._firstName,
+            await this._authenticationService.signUp(this._email, this._password, this._firstName,
                 this._lastName, []);
             
             this._navigationService.navigate(Routes.userLogin);

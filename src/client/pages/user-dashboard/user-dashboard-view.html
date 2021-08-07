@@ -1,5 +1,58 @@
 <div class="user-dashboard">
-    <h1>Welcome back!</h1>
-    <input type="text" class="input" v-model="userId">
-    <button class="button" @click="fetchUserTags">Click</button>
+    <div class="navbar-wrapper">
+        <nav class="navbar is-fixed-top has-background-dark">
+            <div class="navbar-brand p-5">
+                <h1 class="has-text-white">
+                    Secure Tags<sup class="is-size-6">™</sup>
+                </h1>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-end pr-2">
+                    <div class="navbar-item pr-5">
+                        <svg class="icon is-medium navbar-icon is-clickable">
+                            <use xlink:href="~feather#tag"></use>
+                        </svg>
+                    </div>
+                    <div class="navbar-item pr-5">
+                        <svg class="icon is-medium navbar-icon is-clickable">
+                            <use xlink:href="~feather#user"></use>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div v-if="user">
+        <section class="section has-background-light hero-section-padding">
+            <div class="container">
+                <h2 class="subtitle">
+                    Welcome back,
+                </h2>
+                <h1 class="is-size-1 title">
+                    {{ user.firstName + " " + user.lastName }}
+                </h1>
+            </div>
+        </section>
+
+        <section class="section is-medium">
+            <div class="container">
+                <h1 class="title">My Tags</h1>
+                <div v-if="!tags.isEmpty">
+                    <tag-card v-for="tag of tags" :tag="tag"></tag-card>
+                </div>
+                <div v-else>
+                    <h2>You currently have no activated Secure Tags.</h2>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section class="section has-background-dark">
+        <div class="container">
+            <p class="has-text-centered has-text-white mb-2">
+                Secure Tags<sup class="is-size-6">™</sup>
+            </p>
+        </div>
+    </section>
 </div>

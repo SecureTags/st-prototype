@@ -52,9 +52,10 @@ export class UserLoginViewModel extends PageViewModel
         
         try
         {
-            console.log(this._email);
+            const isUserSignedIn = await this._authenticationService.signIn(this._email, this._password);
             
-            await this._authenticationService.signIn(this._email, this._password);
+            if (isUserSignedIn)
+                this._navigationService.navigate(Routes.userDashboard);
         }
         catch (e)
         {

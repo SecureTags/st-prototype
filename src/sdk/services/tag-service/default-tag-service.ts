@@ -105,35 +105,41 @@ export class DefaultTagService implements TagService
         
         const userTags: Array<Tag> = [];
         
-        let userTagIds = null as any;
+        let userTagIds: Array<string> = null as any;
         
         try
         {
             let userData = (await this._db.collection("users").doc(userId).get()).data();
             
-            if (userData)
+            if (userData && userData.tags)
+            {
                 userTagIds = userData.tags;
                 
-            for (let userTagId of userTagIds)
-            {
-                const tagData = (await this._db.collection("tags").doc(userTagId).get()).data();
+                for (let userTagId of userTagIds)
+                {
+                    const tagData = (await this._db.collection("tags").doc(userTagId).get()).data();
+                    
+                    if (tagData)
+                        userTags.push({
+                            id: userTagId,
+                            productName: tagData.productName,
+                            companyName: tagData.companyName,
+                            imageUrl: tagData.imageUrl,
+                            ownerId: userId,
+                        });
+                }
                 
-                if (tagData)
-                    userTags.push({
-                        id: userTagId,
-                        productName: tagData.productName,
-                        companyName: tagData.companyName,
-                        imageUrl: tagData.imageUrl,
-                        ownerId: userId,
-                    });
-            }    
+                return userTags;
+            }
+            else
+            {
+                return [];
+            }
         }
         catch (e)
         {
             throw e;
         }
-        
-        return userTags;
     }
     
     
