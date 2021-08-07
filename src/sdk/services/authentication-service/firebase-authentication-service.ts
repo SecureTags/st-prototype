@@ -1,9 +1,13 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
 import { AuthenticationService } from "./authentication-service";
 
 export class FirebaseAuthenticationService implements AuthenticationService
 {
+    private readonly _db: firebase.firestore.Firestore;
+    
+    
     public constructor()
     {
         const firebaseConfig = {
@@ -22,14 +26,30 @@ export class FirebaseAuthenticationService implements AuthenticationService
             measurementId: "G-J4RQQP0F9S"
         };
         
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length)
+        {
+            firebase.initializeApp(firebaseConfig);
+        }
+        else
+        {
+            firebase.app();
+        }
+        
+        this._db = firebase.firestore();
     }
     
-    public async signUp(email: string, password: string): Promise<void>
+    
+    public async signUpNewUser(email: string, password: string, firstName: string, lastName: string,
+        profileImageUrl: string[]): Promise<void>
     {
         try
         {
             await firebase.auth().createUserWithEmailAndPassword(email, password);
+            
+            const user = firebase.auth().currentUser;
+            
+            if (user)
+                await this._createNewUserInDb(user, firstName, lastName, profileImageUrl);
         }
         catch (e)
         {
@@ -43,6 +63,24 @@ export class FirebaseAuthenticationService implements AuthenticationService
         {
             console.log(email);
             console.log(JSON.stringify(await firebase.auth().signInWithEmailAndPassword(email, password)));
+        }
+        catch (e)
+        {
+            throw e;
+        }
+    }
+    
+    
+    private async _createNewUserInDb(user: firebase.User, firstName: string, lastName: string,
+        profileImageUrl: string[]): Promise<void>
+    {
+        try
+        {
+            await this._db.collection("users").doc(user.uid).set({
+                firstName,
+                lastName,
+                profileImageUrl
+            });
         }
         catch (e)
         {

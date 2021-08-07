@@ -1,14 +1,14 @@
 import { DialogService, NavigationService, PageViewModel, route, template } from "@nivinjoseph/n-app";
-import "./client-login-view.scss";
-import { Routes } from "../routes";
-import { inject } from "@nivinjoseph/n-ject";
 import { given } from "@nivinjoseph/n-defensive";
+import { inject } from "@nivinjoseph/n-ject";
 import { AuthenticationService } from "../../../sdk/services/authentication-service/authentication-service";
+import { Routes } from "../routes";
+import "./user-login-view.scss";
 
-@template(require("./client-login-view.html"))
-@route(Routes.clientLogin)
+@template(require("./user-login-view.html"))
+@route(Routes.userLogin)
 @inject("NavigationService", "DialogService", "AuthenticationService")
-export class ClientLoginViewModel extends PageViewModel
+export class UserLoginViewModel extends PageViewModel
 {
     private readonly _navigationService: NavigationService;
     private readonly _dialogService: DialogService;
@@ -43,7 +43,7 @@ export class ClientLoginViewModel extends PageViewModel
     
     public gotoRegister(): void
     {
-        this._navigationService.navigate(Routes.clientRegister);
+        this._navigationService.navigate(Routes.userRegister);
     }
     
     public async signIn(): Promise<void>

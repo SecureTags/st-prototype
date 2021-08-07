@@ -4,5 +4,5 @@ export interface Tag
     productName: string;
     companyName: string;
     imageUrl: ReadonlyArray<string>;
-    ownerName: string;
+    ownerId: string;
 }

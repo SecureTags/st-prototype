@@ -28,21 +28,31 @@ export class DefaultTagService implements TagService
             measurementId: "G-J4RQQP0F9S"
         };
         
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length)
+        {
+            firebase.initializeApp(firebaseConfig);
+        }
+        else
+        {
+            firebase.app();
+        }
         
         this._db = firebase.firestore();
     }
     
     
     public async createTag(productName: string, companyName: string, imageUrl:
-        ReadonlyArray<string>, ownerName: string): Promise<Tag>
+        ReadonlyArray<string>, userId: string): Promise<Tag>
     {
         given(productName, "productName").ensureHasValue().ensureIsString();     
         given(companyName, "companyName").ensureHasValue().ensureIsString();
         given(imageUrl, "imageUrl").ensureIsArray();
-        given(ownerName, "ownerName").ensureIsString();
+        given(userId, "userId").ensureHasValue().ensureIsString();
         
-        const newTag = new DefaultTagProxy(productName, companyName, imageUrl, ownerName);
+        if (!(await this._doesUserExist(userId)))
+            throw new Error("User Does Not Exist");
+        
+        const newTag = new DefaultTagProxy(productName, companyName, imageUrl, userId);
         
         try
         {
@@ -50,7 +60,11 @@ export class DefaultTagService implements TagService
                 productName: newTag.productName,
                 companyName: newTag.companyName,
                 imageUrl: newTag.imageUrl,
-                ownerName: newTag.ownerName,
+                ownerId: userId,
+            });
+            
+            await this._db.collection("users").doc(userId).update({
+                tags: firebase.firestore.FieldValue.arrayUnion(newTag.id)
             });
         }
         catch (e)
@@ -79,6 +93,59 @@ export class DefaultTagService implements TagService
             throw e;
         }
         
-        return new DefaultTagProxy(tagData.productName, tagData.companyName, tagData.imageUrl, tagData.ownerName);
+        return new DefaultTagProxy(tagData.productName, tagData.companyName, tagData.imageUrl, tagData.ownerId);
+    }
+    
+    public async fetchUserTags(userId: string): Promise<ReadonlyArray<Tag>>
+    {
+        given(userId, "userId").ensureHasValue().ensureIsString();
+        
+        if (!(await this._doesUserExist(userId)))
+            throw new Error("User Does Not Exist");
+        
+        const userTags: Array<Tag> = [];
+        
+        let userTagIds = null as any;
+        
+        try
+        {
+            let userData = (await this._db.collection("users").doc(userId).get()).data();
+            
+            if (userData)
+                userTagIds = userData.tags;
+                
+            for (let userTagId of userTagIds)
+            {
+                const tagData = (await this._db.collection("tags").doc(userTagId).get()).data();
+                
+                if (tagData)
+                    userTags.push({
+                        id: userTagId,
+                        productName: tagData.productName,
+                        companyName: tagData.companyName,
+                        imageUrl: tagData.imageUrl,
+                        ownerId: userId,
+                    });
+            }    
+        }
+        catch (e)
+        {
+            throw e;
+        }
+        
+        return userTags;
+    }
+    
+    
+    private async _doesUserExist(userId: string): Promise<boolean>
+    {
+        try
+        {
+            return (await this._db.collection("users").doc(userId).get()).exists;
+        }
+        catch (e)
+        {
+            throw e;
+        }
     }
 }

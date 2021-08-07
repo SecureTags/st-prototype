@@ -15,7 +15,10 @@ export class ClientTagCreationViewModel extends PageViewModel
     private _productName: string = "";
     private _companyName: string = "";
     private _imageUrl: string = "";
-    private _ownerName: string = "";
+    private _imageUrl1: string = "";
+    private _imageUrl2: string = "";
+    private _imageUrl3: string = "";
+    private _userId: string = "";
     
     
     public get productName(): string { return this._productName; }
@@ -27,8 +30,17 @@ export class ClientTagCreationViewModel extends PageViewModel
     public get imageUrl(): string { return this._imageUrl; }
     public set imageUrl(value: string) { this._imageUrl = value; }
     
-    public get ownerName(): string { return this._ownerName; }
-    public set ownerName(value: string) { this._ownerName = value; }
+    public get imageUrl1(): string { return this._imageUrl1; }
+    public set imageUrl1(value: string) { this._imageUrl1 = value; }
+    
+    public get imageUrl2(): string { return this._imageUrl2; }
+    public set imageUrl2(value: string) { this._imageUrl2 = value; }
+    
+    public get imageUrl3(): string { return this._imageUrl3; }
+    public set imageUrl3(value: string) { this._imageUrl3 = value; }
+
+    public get userId(): string { return this._userId; }
+    public set userId(value: string) { this._userId = value; }
     
     
     
@@ -45,7 +57,8 @@ export class ClientTagCreationViewModel extends PageViewModel
     {
         try
         {
-            await this._tagService.createTag(this._productName, this._companyName, [this._imageUrl], this._ownerName);
+            await this._tagService.createTag(this._productName, this._companyName, [this._imageUrl,
+            this._imageUrl1, this._imageUrl2, this._imageUrl3], this._userId);
         }
         catch (e)
         {

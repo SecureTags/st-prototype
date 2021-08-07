@@ -3,12 +3,12 @@ import { given } from "@nivinjoseph/n-defensive";
 import { inject } from "@nivinjoseph/n-ject";
 import { AuthenticationService } from "../../../sdk/services/authentication-service/authentication-service";
 import { Routes } from "../routes";
-import "./client-register-view.scss";
+import "./user-register-view.scss";
 
-@template(require("./client-register-view.html"))
-@route(Routes.clientRegister)
+@template(require("./user-register-view.html"))
+@route(Routes.userRegister)
 @inject("NavigationService", "DialogService", "AuthenticationService")
-export class ClientRegisterViewModel extends PageViewModel
+export class UserRegisterViewModel extends PageViewModel
 {
     private readonly _navigationService: NavigationService;
     private readonly _dialogService: DialogService;
@@ -16,6 +16,8 @@ export class ClientRegisterViewModel extends PageViewModel
     
     private _email: string = "";
     private _password: string = "";
+    private _firstName: string = "";
+    private _lastName: string = "";
     
     
     public get email(): string { return this._email; }
@@ -23,6 +25,12 @@ export class ClientRegisterViewModel extends PageViewModel
     
     public get password(): string { return this._password; }
     public set password(value: string) { this._password = value; }
+    
+    public get firstName(): string { return this._firstName; }
+    public set firstName(value: string) { this._firstName = value; }
+    
+    public get lastName(): string { return this._lastName; }
+    public set lastName(value: string) { this._lastName = value; }
     
     
     public constructor(navigationService: NavigationService, dialogService: DialogService,
@@ -47,9 +55,10 @@ export class ClientRegisterViewModel extends PageViewModel
         
         try
         {
-            await this._authenticationService.signUp(this._email, this._password);
+            await this._authenticationService.signUpNewUser(this._email, this._password, this._firstName,
+                this._lastName, []);
             
-            this._navigationService.navigate(Routes.clientLogin);
+            this._navigationService.navigate(Routes.userLogin);
         }
         catch (e)
         {

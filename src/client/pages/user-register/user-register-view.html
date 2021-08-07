@@ -1,10 +1,28 @@
-<div class="client-register">
+<div class="user-register">
     <section class="hero is-fullheight is-info">
         <div class="hero-body">
             <div class="columns is-flex-grow-1">
                 <div class="column is-flex is-justify-content-center">
                     <div class="registration-container box">
-                        <h3 class="has-text-weight-bold has-text-centered">Sign Up</h3>
+                        <h3 class="has-text-weight-bold has-text-centered mb-1">Sign Up</h3>
+                        <div class="columns my-0">
+                            <div class="column">
+                                <div class="field">
+                                    <label for="" class="label">First Name</label>
+                                    <div class="control">
+                                        <input type="text" class="input" v-model="firstName"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="field">
+                                    <label for="" class="label">Last Name</label>
+                                    <div class="control">
+                                        <input type="text" class="input" v-model="lastName"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="field">
                             <label for="" class="label">Email</label>
                             <div class="control">
