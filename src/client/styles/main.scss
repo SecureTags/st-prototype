@@ -35,4 +35,9 @@ h4
     fill: none;
     stroke-linecap: round;
     stroke-linejoin: round;
+    
+    &.is-dark
+    {
+        stroke: $dark;
+    }
 }

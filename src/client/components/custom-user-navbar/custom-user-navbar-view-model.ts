@@ -41,4 +41,14 @@ export class CustomUserNavbarViewModel extends ComponentViewModel
             this._navigationService.navigate(Routes.userLogin);
         }
     }
+    
+    public gotoUserDashboard(): void
+    {
+        this._navigationService.navigate(Routes.userDashboard);
+    }
+    
+    public gotoUserTransferOwnership(): void
+    {
+        this._navigationService.navigate(Routes.userTransferOwnership);
+    }
 }

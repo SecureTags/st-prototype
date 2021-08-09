@@ -9,13 +9,13 @@
             <div class="navbar-menu">
                 <div class="navbar-end pr-2">
                     <div class="navbar-item pr-5">
-                        <svg class="icon is-medium icon is-clickable">
+                        <svg class="icon is-medium icon is-clickable" @click="gotoUserDashboard">
                             <use xlink:href="~feather#tag"></use>
                         </svg>
                     </div>
                     <div class="navbar-item pr-5">
-                        <svg class="icon is-medium icon is-clickable">
-                            <use xlink:href="~feather#user"></use>
+                        <svg class="icon is-medium icon is-clickable" @click="gotoUserTransferOwnership">
+                            <use xlink:href="~feather#repeat"></use>
                         </svg>
                     </div>
                     <div class="navbar-item pr-5">

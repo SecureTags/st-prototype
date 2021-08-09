@@ -6,7 +6,6 @@ import { User } from "../../../sdk/proxies/user/user";
 import { AuthenticationService } from "../../../sdk/services/authentication-service/authentication-service";
 import { TagService } from "../../../sdk/services/tag-service/tag-service";
 import { UserService } from "../../../sdk/services/user-service/user-service";
-import { CustomUserNavbarViewModel } from "../../components/custom-user-navbar/custom-user-navbar-view-model";
 import { Routes } from "../routes";
 import { TagCardViewModel } from "./components/tag-card/tag-card-view-model";
 import "./user-dashboard-view.scss";
@@ -14,7 +13,7 @@ import "./user-dashboard-view.scss";
 @template(require("./user-dashboard-view.html"))
 @route(Routes.userDashboard)
 @inject("TagService", "AuthenticationService", "UserService", "DialogService", "NavigationService")
-@components(TagCardViewModel, CustomUserNavbarViewModel)    
+@components(TagCardViewModel)    
 export class UserDashboardViewModel extends PageViewModel
 {
     private readonly _tagService: TagService;
@@ -54,13 +53,37 @@ export class UserDashboardViewModel extends PageViewModel
     }
     
     
+    public gotoUserTransferOwnership(): void
+    {
+        this._navigationService.navigate(Routes.userTransferOwnership);
+    }
+    
+    
     protected override async onEnter(): Promise<void>
     {
         this._dialogService.showLoadingScreen();
         
         try
         {
-            const userId = await this._authenticationService.getCurrentUserId();
+            await this._authenticateAndRetrieveData();
+        }
+        catch (e)
+        {
+            console.error(e);
+            this._dialogService.showErrorMessage("An error has occurred, please try again.", "Error");
+        }
+        finally
+        {
+            this._dialogService.hideLoadingScreen();
+        }
+    }
+    
+    
+    private async _authenticateAndRetrieveData(): Promise<void>
+    {
+        try
+        {
+            const userId = this._authenticationService.getCurrentUserId();
             
             if (!userId)
             {
@@ -73,12 +96,7 @@ export class UserDashboardViewModel extends PageViewModel
         }
         catch (e)
         {
-            console.error(e);
-            this._dialogService.showErrorMessage("An error has occurred, please try again.", "Error");
-        }
-        finally
-        {
-            this._dialogService.hideLoadingScreen();
+            throw e;
         }
     }
 }

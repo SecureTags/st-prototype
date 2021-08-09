@@ -10,12 +10,23 @@
                 <h1 class="is-size-1 title">
                     {{ user.firstName + " " + user.lastName }}
                 </h1>
+                <p class="has-text-weight-bold">
+                    {{ user.id }}
+                </p>
             </div>
         </section>
 
         <section class="section is-medium">
             <div class="container">
-                <h1 class="title">My Tags</h1>
+                <div class="is-flex is-justify-content-space-between mb-3">
+                    <div class="is-flex is-align-items-center">
+                        <svg class="icon is-dark mr-2">
+                            <use xlink:href="~feather#tag"></use>
+                        </svg>
+                        <h1 class="title">My Tags</h1>
+                    </div>
+                    <button class="button is-dark" @click="gotoUserTransferOwnership">Transfer Ownership</button>
+                </div>
                 <div v-if="!tags.isEmpty">
                     <tag-card v-for="tag of tags" :tag="tag" :key="tag.id"></tag-card>
                 </div>
@@ -26,11 +37,5 @@
         </section>
     </div>
 
-    <section class="section has-background-dark">
-        <div class="container">
-            <p class="has-text-centered has-text-white mb-2">
-                Secure Tags<sup class="is-size-6">™</sup>
-            </p>
-        </div>
-    </section>
+    <custom-user-footer></custom-user-footer>
 </div>

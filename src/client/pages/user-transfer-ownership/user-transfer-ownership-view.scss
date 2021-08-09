@@ -1,0 +1,14 @@
+@import "../../styles/main.scss";
+
+.user-transfer-ownership
+{
+    .hero-section-padding
+    {
+        padding: 20rem 6rem;
+        
+        @include until($desktop)
+        {
+            padding: 15rem 1.5rem;
+        }
+    }
+}
