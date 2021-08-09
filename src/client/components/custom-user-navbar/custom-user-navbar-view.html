@@ -1,0 +1,30 @@
+<div class="custom-user-navbar">
+    <div class="navbar-wrapper">
+        <nav class="navbar is-fixed-top has-background-dark">
+            <div class="navbar-brand p-5">
+                <h1 class="has-text-white">
+                    Secure Tags<sup class="is-size-6">™</sup>
+                </h1>
+            </div>
+            <div class="navbar-menu">
+                <div class="navbar-end pr-2">
+                    <div class="navbar-item pr-5">
+                        <svg class="icon is-medium icon is-clickable" @click="gotoUserDashboard">
+                            <use xlink:href="~feather#tag"></use>
+                        </svg>
+                    </div>
+                    <div class="navbar-item pr-5">
+                        <svg class="icon is-medium icon is-clickable" @click="gotoUserTransferOwnership">
+                            <use xlink:href="~feather#repeat"></use>
+                        </svg>
+                    </div>
+                    <div class="navbar-item pr-5">
+                        <svg class="icon is-medium icon is-clickable" @click="signOut">
+                            <use xlink:href="~feather#log-out"></use>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>

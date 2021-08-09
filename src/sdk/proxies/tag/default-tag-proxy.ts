@@ -1,9 +1,12 @@
 import { given } from "@nivinjoseph/n-defensive";
-import { Uuid } from "@nivinjoseph/n-util";
 import { Tag } from "./tag";
+import firebase from "firebase/app";
+import "firebase/firestore";
 
 export class DefaultTagProxy implements Tag
 {
+    private readonly _db: firebase.firestore.Firestore;
+    
     private readonly _id: string;
     private _productName: string;
     private _companyName: string;
@@ -18,8 +21,11 @@ export class DefaultTagProxy implements Tag
     public get ownerId(): string { return this._ownerId; }
     
     
-    public constructor(productName: string, companyName: string, imageUrl: ReadonlyArray<string>, ownerId: string)
+    public constructor(id: string, productName: string, companyName: string, imageUrl: ReadonlyArray<string>, ownerId: string)
     {
+        given(id, "id").ensureHasValue().ensureIsString();
+        this._id = id;
+        
         given(productName, "productName").ensureHasValue().ensureIsString();
         this._productName = productName;
         
@@ -32,6 +38,23 @@ export class DefaultTagProxy implements Tag
         given(ownerId, "ownerId").ensureHasValue().ensureIsString();
         this._ownerId = ownerId;
         
-        this._id = Uuid.create();
+        firebase.app();
+        
+        this._db = firebase.firestore();
+    }
+    
+    
+    public async transferTagOwnership(targetOwnerId: string): Promise<void>
+    {
+        try
+        {
+            await this._db.collection("tags").doc(this._id).update({
+                ownerId: targetOwnerId
+            });
+        }
+        catch (e)
+        {
+            throw e;
+        }
     }
 }

@@ -1,4 +1,4 @@
-import { components, DialogService, PageViewModel, route, template } from "@nivinjoseph/n-app";
+import { components, DialogService, NavigationService, PageViewModel, route, template } from "@nivinjoseph/n-app";
 import { given } from "@nivinjoseph/n-defensive";
 import { inject } from "@nivinjoseph/n-ject";
 import { Tag } from "../../../sdk/proxies/tag/tag";
@@ -12,7 +12,7 @@ import "./user-dashboard-view.scss";
 
 @template(require("./user-dashboard-view.html"))
 @route(Routes.userDashboard)
-@inject("TagService", "AuthenticationService", "UserService", "DialogService")
+@inject("TagService", "AuthenticationService", "UserService", "DialogService", "NavigationService")
 @components(TagCardViewModel)    
 export class UserDashboardViewModel extends PageViewModel
 {
@@ -20,6 +20,7 @@ export class UserDashboardViewModel extends PageViewModel
     private readonly _authenticationService: AuthenticationService;
     private readonly _userService: UserService;
     private readonly _dialogService: DialogService;
+    private readonly _navigationService: NavigationService;
     
     private _tags: ReadonlyArray<Tag> = [];
     private _user: User = null as any;
@@ -31,7 +32,7 @@ export class UserDashboardViewModel extends PageViewModel
     
     
     public constructor(tagService: TagService, authenticationService: AuthenticationService, userService: UserService,
-        dialogService: DialogService)
+        dialogService: DialogService, navigationService: NavigationService)
     {
         super();
         
@@ -46,6 +47,15 @@ export class UserDashboardViewModel extends PageViewModel
         
         given(dialogService, "dialogService").ensureHasValue().ensureIsObject();
         this._dialogService = dialogService;
+        
+        given(navigationService, "navigationService").ensureHasValue().ensureIsObject();
+        this._navigationService = navigationService;
+    }
+    
+    
+    public gotoUserTransferOwnership(): void
+    {
+        this._navigationService.navigate(Routes.userTransferOwnership);
     }
     
     
@@ -55,9 +65,7 @@ export class UserDashboardViewModel extends PageViewModel
         
         try
         {
-            const userId = await this._authenticationService.getCurrentUserId();
-            this._user = await this._userService.fetchUserData(userId);
-            this._tags = await this._tagService.fetchUserTags(userId);
+            await this._authenticateAndRetrieveData();
         }
         catch (e)
         {
@@ -67,6 +75,28 @@ export class UserDashboardViewModel extends PageViewModel
         finally
         {
             this._dialogService.hideLoadingScreen();
+        }
+    }
+    
+    
+    private async _authenticateAndRetrieveData(): Promise<void>
+    {
+        try
+        {
+            const userId = this._authenticationService.getCurrentUserId();
+            
+            if (!userId)
+            {
+                this._navigationService.navigate(Routes.userLogin);
+                return;
+            }
+            
+            this._user = await this._userService.fetchUserData(userId);
+            this._tags = await this._tagService.fetchUserTags(userId);
+        }
+        catch (e)
+        {
+            throw e;
         }
     }
 }

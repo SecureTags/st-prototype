@@ -6,6 +6,7 @@
     box-sizing: border-box;
 }
 
+// TODO: Move to a typography file
 h1
 {
     font-size: 2rem;
@@ -24,4 +25,19 @@ h3
 h4
 {
     font-size: 1.25rem;
+}
+
+// TODO: Move to a iconography file
+.icon
+{
+    stroke: white;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    
+    &.is-dark
+    {
+        stroke: $dark;
+    }
 }

@@ -74,14 +74,26 @@ export class FirebaseAuthenticationService implements AuthenticationService
         return false;
     }
     
-    public async getCurrentUserId(): Promise<string>
+    public async signOut(): Promise<void>
+    {
+        try
+        {
+            await firebase.auth().signOut();
+        }
+        catch (e)
+        {
+            throw e;
+        }
+    }
+    
+    public getCurrentUserId(): string | null
     {
         const user = firebase.auth().currentUser;
         
         if (user)
             return user.uid;
         
-        throw new Error("User UID is null");
+        return null;
     }
     
     

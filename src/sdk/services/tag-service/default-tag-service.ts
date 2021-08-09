@@ -4,6 +4,7 @@ import { Tag } from "../../proxies/tag/tag";
 import { TagService } from "./tag-service";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { Uuid } from "@nivinjoseph/n-util";
 
 export class DefaultTagService implements TagService
 {
@@ -52,20 +53,12 @@ export class DefaultTagService implements TagService
         if (!(await this._doesUserExist(userId)))
             throw new Error("User Does Not Exist");
         
-        const newTag = new DefaultTagProxy(productName, companyName, imageUrl, userId);
+        const newTag = new DefaultTagProxy(Uuid.create(), productName, companyName, imageUrl, userId);
         
         try
         {
-            await this._db.collection("tags").doc(newTag.id).set({
-                productName: newTag.productName,
-                companyName: newTag.companyName,
-                imageUrl: newTag.imageUrl,
-                ownerId: userId,
-            });
-            
-            await this._db.collection("users").doc(userId).update({
-                tags: firebase.firestore.FieldValue.arrayUnion(newTag.id)
-            });
+            await this.createNewTagInDb(newTag, userId);
+            await this.updateUserTags(userId, newTag);
         }
         catch (e)
         {
@@ -74,7 +67,7 @@ export class DefaultTagService implements TagService
         
         return newTag;
     }
-    
+
     public async fetchTag(id: string): Promise<Tag>
     {
         given(id, "id").ensureHasValue().ensureIsString();
@@ -93,7 +86,7 @@ export class DefaultTagService implements TagService
             throw e;
         }
         
-        return new DefaultTagProxy(tagData.productName, tagData.companyName, tagData.imageUrl, tagData.ownerId);
+        return new DefaultTagProxy(id, tagData.productName, tagData.companyName, tagData.imageUrl, tagData.ownerId);
     }
     
     public async fetchUserTags(userId: string): Promise<ReadonlyArray<Tag>>
@@ -120,13 +113,8 @@ export class DefaultTagService implements TagService
                     const tagData = (await this._db.collection("tags").doc(userTagId).get()).data();
                     
                     if (tagData)
-                        userTags.push({
-                            id: userTagId,
-                            productName: tagData.productName,
-                            companyName: tagData.companyName,
-                            imageUrl: tagData.imageUrl,
-                            ownerId: userId,
-                        });
+                        userTags.push(new DefaultTagProxy(userTagId, tagData.productName, tagData.companyName,
+                            tagData.imageUrl, tagData.ownerId));
                 }
                 
                 return userTags;
@@ -148,6 +136,37 @@ export class DefaultTagService implements TagService
         try
         {
             return (await this._db.collection("users").doc(userId).get()).exists;
+        }
+        catch (e)
+        {
+            throw e;
+        }
+    }
+    
+    private async createNewTagInDb(newTag: DefaultTagProxy, userId: string)
+    {
+        try
+        {
+            await this._db.collection("tags").doc(newTag.id).set({
+                productName: newTag.productName,
+                companyName: newTag.companyName,
+                imageUrl: newTag.imageUrl,
+                ownerId: userId,
+            });
+        }
+        catch (e)
+        {
+            throw e;
+        }
+    }
+    
+    private async updateUserTags(userId: string, newTag: DefaultTagProxy)
+    {
+        try
+        {
+            await this._db.collection("users").doc(userId).update({
+                tags: firebase.firestore.FieldValue.arrayUnion(newTag.id)
+            });
         }
         catch (e)
         {

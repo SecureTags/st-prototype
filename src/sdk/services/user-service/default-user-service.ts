@@ -2,7 +2,7 @@ import { UserService } from "./user-service";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { given } from "@nivinjoseph/n-defensive";
-import { User } from "../../proxies/user/user";
+import { DefaultUserProxy } from "../../proxies/user/default-user-proxy";
 
 export class DefaultUserService implements UserService
 {
@@ -39,7 +39,7 @@ export class DefaultUserService implements UserService
         this._db = firebase.firestore();
     }
     
-    public async fetchUserData(userId: string): Promise<User>
+    public async fetchUserData(userId: string): Promise<DefaultUserProxy>
     {
         given(userId, "userId").ensureHasValue().ensureIsString();
         
@@ -48,14 +48,26 @@ export class DefaultUserService implements UserService
             const userData = (await this._db.collection("users").doc(userId).get()).data();
             
             if (userData)
-                return {
-                    id: userData.id,
-                    firstName: userData.firstName,
-                    lastName: userData.lastName,
-                    profileImageUrl: userData.profileImageUrl,
-                };
+                return new DefaultUserProxy(userId, userData.firstName, userData.lastName,
+                    userData.profileImageUrl, userData.tags);
             
             throw new Error("User Data is Undefined");
+        }
+        catch (e)
+        {
+            throw e;
+        }
+    }
+    
+    public async checkIfUserExist(userId: string): Promise<boolean>
+    {
+        given(userId, "userId").ensureHasValue().ensureIsString();
+        
+        try
+        {
+            const userData = await this._db.collection("users").doc(userId).get();
+            
+            return userData.exists;
         }
         catch (e)
         {
