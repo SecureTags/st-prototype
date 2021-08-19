@@ -14,12 +14,6 @@ export class DefaultTagService implements TagService
     public constructor()
     {
         const firebaseConfig = {
-            // apiKey: process.env.API_KEY,
-            // authDomain: process.env.AUTH_DOMAIN,
-            // projectId: process.env.PROJECT_ID,
-            // storageBucket: process.env.STORAGE_BUCKET,
-            // appId: process.env.APP_ID,
-            // measurementId: process.env.MEASUREMENT_ID,
             apiKey: "AIzaSyC45RUtQuCAQm0PBJPfCIfbfcOlFo8xkCU",
             authDomain: "project-st-b1b27.firebaseapp.com",
             projectId: "project-st-b1b27",
@@ -53,7 +47,7 @@ export class DefaultTagService implements TagService
         if (!(await this._doesUserExist(userId)))
             throw new Error("User Does Not Exist");
         
-        const newTag = new DefaultTagProxy(Uuid.create(), productName, companyName, imageUrl, userId);
+        const newTag = new DefaultTagProxy(Uuid.create(), productName, companyName, imageUrl, userId, false);
         
         try
         {
@@ -86,7 +80,8 @@ export class DefaultTagService implements TagService
             throw e;
         }
         
-        return new DefaultTagProxy(id, tagData.productName, tagData.companyName, tagData.imageUrl, tagData.ownerId);
+        return new DefaultTagProxy(id, tagData.productName, tagData.companyName, tagData.imageUrl, tagData.ownerId,
+            tagData.isLost);
     }
     
     public async fetchUserTags(userId: string): Promise<ReadonlyArray<Tag>>
@@ -114,7 +109,7 @@ export class DefaultTagService implements TagService
                     
                     if (tagData)
                         userTags.push(new DefaultTagProxy(userTagId, tagData.productName, tagData.companyName,
-                            tagData.imageUrl, tagData.ownerId));
+                            tagData.imageUrl, tagData.ownerId, tagData.isLost));
                 }
                 
                 return userTags;

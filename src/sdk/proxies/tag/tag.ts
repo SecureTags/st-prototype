@@ -5,6 +5,8 @@ export interface Tag
     companyName: string;
     imageUrl: ReadonlyArray<string>;
     ownerId: string;
+    isLost: boolean;
     
     transferTagOwnership(targetOwnerId: string): Promise<void>;
+    flagTagAsLost(): Promise<void>;
 }

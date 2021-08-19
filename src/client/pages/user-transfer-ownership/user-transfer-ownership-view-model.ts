@@ -107,6 +107,18 @@ export class UserTransferOwnershipViewModel extends PageViewModel
         this._isDropdownOpen = false;
     }
     
+    public async flagTagAsLost(): Promise<void>
+    {
+        try
+        {
+            await this._selectedTag.flagTagAsLost();
+        }
+        catch (e)
+        {
+            console.error(e);
+        }
+    }
+    
     
     protected override async onEnter(): Promise<void>
     {

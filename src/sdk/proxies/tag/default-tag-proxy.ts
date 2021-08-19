@@ -12,6 +12,7 @@ export class DefaultTagProxy implements Tag
     private _companyName: string;
     private _imageUrl: ReadonlyArray<string>;
     private _ownerId: string;
+    private _isLost: boolean;
     
     
     public get id(): string { return this._id; }
@@ -19,9 +20,10 @@ export class DefaultTagProxy implements Tag
     public get companyName(): string { return this._companyName; }
     public get imageUrl(): ReadonlyArray<string> { return this._imageUrl; }
     public get ownerId(): string { return this._ownerId; }
+    public get isLost(): boolean { return this._isLost; }
     
     
-    public constructor(id: string, productName: string, companyName: string, imageUrl: ReadonlyArray<string>, ownerId: string)
+    public constructor(id: string, productName: string, companyName: string, imageUrl: ReadonlyArray<string>, ownerId: string, isLost: boolean)
     {
         given(id, "id").ensureHasValue().ensureIsString();
         this._id = id;
@@ -38,6 +40,9 @@ export class DefaultTagProxy implements Tag
         given(ownerId, "ownerId").ensureHasValue().ensureIsString();
         this._ownerId = ownerId;
         
+        given(isLost, "isLost").ensureHasValue();
+        this._isLost = isLost;
+        
         firebase.app();
         
         this._db = firebase.firestore();
@@ -50,6 +55,20 @@ export class DefaultTagProxy implements Tag
         {
             await this._db.collection("tags").doc(this._id).update({
                 ownerId: targetOwnerId
+            });
+        }
+        catch (e)
+        {
+            throw e;
+        }
+    }
+    
+    public async flagTagAsLost(): Promise<void>
+    {
+        try
+        {
+            await this._db.collection("tags").doc(this._id).update({
+                isLost: true
             });
         }
         catch (e)

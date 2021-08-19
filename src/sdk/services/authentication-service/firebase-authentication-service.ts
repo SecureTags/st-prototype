@@ -11,12 +11,6 @@ export class FirebaseAuthenticationService implements AuthenticationService
     public constructor()
     {
         const firebaseConfig = {
-            // apiKey: process.env.API_KEY,
-            // authDomain: process.env.AUTH_DOMAIN,
-            // projectId: process.env.PROJECT_ID,
-            // storageBucket: process.env.STORAGE_BUCKET,
-            // appId: process.env.APP_ID,
-            // measurementId: process.env.MEASUREMENT_ID,
             apiKey: "AIzaSyC45RUtQuCAQm0PBJPfCIfbfcOlFo8xkCU",
             authDomain: "project-st-b1b27.firebaseapp.com",
             projectId: "project-st-b1b27",

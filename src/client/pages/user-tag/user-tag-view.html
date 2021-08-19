@@ -1,7 +1,6 @@
 <div class="user-tag">
-    <custom-navbar></custom-navbar>
-
     <div v-if="tag && user">
+        <custom-navbar :tag="tag"></custom-navbar>
         <section
             class="section item-background-image is-large hero-section-padding"
             :style="{ backgroundImage: 'url(' + tag.imageUrl[0] + ')' }"

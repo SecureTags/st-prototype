@@ -1,13 +1,13 @@
 <div class="custom-navbar">
     <div class="navbar-wrapper">
-        <nav class="navbar is-fixed-top">
+        <nav class="navbar is-fixed-top" :class="{ 'is-danger': tag.isLost }">
             <div class="navbar-brand p-5">
                 <h1>Secure Tags<sup class="is-size-6">™</sup></h1>
             </div>
             <div class="navbar-menu">
                 <div class="navbar-end">
                     <div class="navbar-item">
-                        <button class="button" @click="gotoUserLogin">Login</button>
+                        <button class="button is-dark" @click="gotoUserLogin">Login</button>
                     </div>
                 </div>
             </div>
