@@ -1,16 +1,12 @@
-<div class="user-transfer-ownership">
-    <!-- <input type="text" class="input" placeholder="tagId" v-model="tagId">
-    <input type="text" class="input" placeholder="ownerId" v-model="ownerId">
-    <input type="text" class="input" placeholder="targetOwnerId" v-model="targetOwnerId">
-    <button class="button" @click="transferTagOwnership">Transfer</button> -->
-    
+<div class="user-edit-tag">
+
     <custom-user-navbar></custom-user-navbar>
     
     <div v-if="user && tags">
         <section class="section has-background-light hero-section-padding">
             <div class="container">
                 <h2 class="subtitle">
-                    Ownership Transfer
+                    Edit Tag
                 </h2>
                 <h1 class="is-size-1 title">
                     {{ user.firstName + " " + user.lastName }}
@@ -30,9 +26,9 @@
                 </div>
                 
                 <div class="mb-3">
-                    <div class="dropdown" :class=" { 'is-active': isDropdownOpen }">
+                    <div class="dropdown" :class="{ 'is-active': isTagDropdownOpen }">
                         <div class="dropdown-trigger">
-                            <button class="button" @click="openDropdown">
+                            <button class="button" @click="openTagDropdown">
                                 <span>{{ selectTagDropdownPlaceholder }}</span>
                                 <span class="icon is-small">
                                     <i class="material-icons">expand_more</i>
@@ -54,11 +50,31 @@
                             </div>
                         </div>
                     </div>
+                    <div class="dropdown" :class="{ 'is-active': isActionDropdownOpen }">
+                        <div class="dropdown-trigger">
+                            <button class="button" @click="openActionDropdown">
+                                <span>{{ selectActionDropdownPlaceholder }}</span>
+                                <span class="icon is-small">
+                                    <i class="material-icons">expand_more</i>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-content">
+                                <a class="dropdown-item" @click="selectAction('Ownership Transfer')">
+                                    Ownership Transfer
+                                </a>
+                                <a class="dropdown-item" @click="selectAction('Lost Tag')">
+                                    Lost Tag
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 
                 <div v-if="selectedTag">
                     <tag-card :tag="selectedTag"></tag-card>
-                    <div class="columns">
+                    <div class="columns" v-if="selectedAction === 'Ownership Transfer'">
                         <div class="column is-4">
                             <div class="field">
                                 <label class="label">Enter New Owner UID</label>
@@ -76,8 +92,20 @@
                                 <button class="button is-danger is-light" @click="transferTagOwnership">
                                     Transfer
                                 </button>
-                                <button class="button is-danger is-light" @click="flagTagAsLost">
-                                    Tag Tag as Lost Tag
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns" v-if="selectedAction === 'Lost Tag'">
+                        <div class="column is-4">
+                            <div class="field">
+                                <label class="label">Lost Tag</label>
+                            </div>
+                            <div class="field">
+                                <button class="button is-danger is-light" @click="flagTagAsLost" v-if="!selectedTag.isLost">
+                                    Mark as Lost
+                                </button>
+                                <button class="button is-primary is-light" @click="flagTagAsFound" v-if="selectedTag.isLost">
+                                    Mark as Found
                                 </button>
                             </div>
                         </div>

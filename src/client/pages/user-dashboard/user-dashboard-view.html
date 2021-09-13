@@ -25,7 +25,7 @@
                         </svg>
                         <h1 class="title">My Tags</h1>
                     </div>
-                    <button class="button is-dark" @click="gotoUserTransferOwnership">Transfer Ownership</button>
+                    <button class="button is-dark" @click="gotoUserTransferOwnership">Edit Tag</button>
                 </div>
                 <div v-if="!tags.isEmpty">
                     <tag-card v-for="tag of tags" :tag="tag" :key="tag.id"></tag-card>

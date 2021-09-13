@@ -9,4 +9,5 @@ export interface Tag
     
     transferTagOwnership(targetOwnerId: string): Promise<void>;
     flagTagAsLost(): Promise<void>;
+    flagTasAsFound(): Promise<void>;
 }

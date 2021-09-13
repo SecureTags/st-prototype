@@ -5,7 +5,7 @@ export class Routes
     public static readonly userLogin = "/user-login";
     public static readonly userRegister = "/user-register";
     public static readonly userDashboard = "/user-dashboard";
-    public static readonly userTransferOwnership = "/user-transfer-ownership";
+    public static readonly userEditTag = "/user-edit-tag";
     
     public static readonly default = Routes.userLogin;
 }

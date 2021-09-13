@@ -6,6 +6,9 @@
             :style="{ backgroundImage: 'url(' + tag.imageUrl[0] + ')' }"
         >
             <div class="container">
+                <h2 class="has-text-danger has-text-weight-bold is-underlined" v-if="tag.isLost">
+                    Lost or Stolen
+                </h2>
                 <h2 class="has-text-white is-italic">
                     {{ user.firstName + " " + user.lastName }}'s
                 </h2>

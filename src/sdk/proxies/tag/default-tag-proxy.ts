@@ -70,10 +70,28 @@ export class DefaultTagProxy implements Tag
             await this._db.collection("tags").doc(this._id).update({
                 isLost: true
             });
+            
+            this._isLost = true;
         }
         catch (e)
         {
             throw e;
+        }
+    }
+    
+    public async flagTasAsFound(): Promise<void>
+    {
+        try
+        {
+            await this._db.collection("tags").doc(this._id).update({
+                isLost: false
+            });
+            
+            this._isLost = false;
+        }
+        catch (e)
+        {
+            throw (e);
         }
     }
 }

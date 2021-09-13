@@ -7,12 +7,12 @@ import { AuthenticationService } from "../../../sdk/services/authentication-serv
 import { TagService } from "../../../sdk/services/tag-service/tag-service";
 import { UserService } from "../../../sdk/services/user-service/user-service";
 import { Routes } from "../routes";
-import "./user-transfer-ownership-view.scss";
+import "./user-edit-tag-view.scss";
 
-@template(require("./user-transfer-ownership-view.html"))
-@route(Routes.userTransferOwnership)
+@template(require("./user-edit-tag-view.html"))
+@route(Routes.userEditTag)
 @inject("TagService", "AuthenticationService", "UserService", "DialogService", "NavigationService")
-export class UserTransferOwnershipViewModel extends PageViewModel
+export class UserEditTagViewModel extends PageViewModel
 {
     private readonly _userService: UserService;
     private readonly _tagService: TagService;
@@ -23,8 +23,10 @@ export class UserTransferOwnershipViewModel extends PageViewModel
     private _targetOwnerId: string = "";
     private _user: User = null as any;
     private _tags: ReadonlyArray<Tag> = null as any;
-    private _isDropdownOpen: boolean = false;
+    private _isTagDropdownOpen: boolean = false;
+    private _isActionDropdownOpen: boolean = false;
     private _selectedTag: Tag = null as any;
+    private _selectedAction: string = null as any;
     
     
     public get targetOwnerId(): string { return this._targetOwnerId; }
@@ -34,16 +36,23 @@ export class UserTransferOwnershipViewModel extends PageViewModel
     
     public get tags(): ReadonlyArray<Tag> { return this._tags; }
     
-    public get isDropdownOpen(): boolean { return this._isDropdownOpen; }
+    public get isTagDropdownOpen(): boolean { return this._isTagDropdownOpen; }
+    
+    public get isActionDropdownOpen(): boolean { return this._isActionDropdownOpen; }
     
     public get selectedTag(): Tag { return this._selectedTag; }
     
+    public get selectedAction(): string { return this._selectedAction; }
+    
     public get selectTagDropdownPlaceholder(): string
     {
-        if (this._selectedTag)
-            return `${this._selectedTag.companyName}, ${this._selectedTag.productName}`;
-        
-        return "Select Tag";
+        return this._selectedTag ? `${this._selectedTag.companyName}, ${this._selectedTag.productName}` :
+            "Select Tag";
+    }
+    
+    public get selectActionDropdownPlaceholder(): string
+    {
+        return this._selectedAction ? this._selectedAction : "Select Action";
     }
     
     
@@ -93,9 +102,14 @@ export class UserTransferOwnershipViewModel extends PageViewModel
         }
     }
     
-    public openDropdown(): void
+    public openTagDropdown(): void
     {
-        this._isDropdownOpen = !this._isDropdownOpen;
+        this._isTagDropdownOpen = !this._isTagDropdownOpen;
+    }
+    
+    public openActionDropdown(): void
+    {
+        this._isActionDropdownOpen = !this._isActionDropdownOpen;
     }
     
     public selectTag(tag: Tag): void
@@ -104,7 +118,16 @@ export class UserTransferOwnershipViewModel extends PageViewModel
         
         this._selectedTag = tag;
         
-        this._isDropdownOpen = false;
+        this._isTagDropdownOpen = false;
+    }
+    
+    public selectAction(action: string): void
+    {
+        given(action, "action").ensureHasValue().ensureIsString();
+        
+        this._selectedAction = action;
+        
+        this._isActionDropdownOpen = false;
     }
     
     public async flagTagAsLost(): Promise<void>
@@ -112,6 +135,22 @@ export class UserTransferOwnershipViewModel extends PageViewModel
         try
         {
             await this._selectedTag.flagTagAsLost();
+            
+            this._dialogService.showSuccessMessage(`Tag has been marked as lost!`, "Success");
+        }
+        catch (e)
+        {
+            console.error(e);
+        }
+    }
+    
+    public async flagTagAsFound(): Promise<void>
+    {
+        try
+        {
+            await this._selectedTag.flagTasAsFound();
+            
+            this._dialogService.showSuccessMessage(`Tag has been marked as found!`, "Success");
         }
         catch (e)
         {

@@ -55,7 +55,7 @@ export class UserDashboardViewModel extends PageViewModel
     
     public gotoUserTransferOwnership(): void
     {
-        this._navigationService.navigate(Routes.userTransferOwnership);
+        this._navigationService.navigate(Routes.userEditTag);
     }
     
     
